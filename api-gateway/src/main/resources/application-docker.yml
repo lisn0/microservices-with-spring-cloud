@@ -1,0 +1,30 @@
+server:
+    port: 8083
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    loadbalancer:
+      enabled: true
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: finance
+          uri: lb://finance
+          predicates:
+            - Path=/api/finance/**
+        - id: interior
+          uri: lb://interior
+          predicates:
+            - Path=/api/v1/interior/**
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://eureka-server:8761/eureka
+        fetch-registry: true
+        register-with-eureka: true

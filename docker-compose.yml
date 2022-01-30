@@ -1,0 +1,126 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: microservices
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+  interior:
+    image: lisn0/interior:latest
+    container_name: interior
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - postgres
+      - spring
+    depends_on:
+      - postgres
+      - eureka-server
+      - zipkin
+  finance:
+    image: lisn0/finance:mongo
+    container_name: finance
+    restart: on-failure
+    ports:
+      - "9001:9001"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - postgres
+      - spring
+      - mongo
+    depends_on:
+      - postgres
+      - eureka-server
+      - mongo-database
+      - zipkin
+  eureka-server:
+    image: lisn0/eureka-server:latest
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - postgres
+      - spring
+    depends_on:
+      - zipkin
+
+  api-gateway:
+    image: lisn0/api-gateway:latest
+    container_name: api-gateway
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+    depends_on:
+      - eureka-server
+      - zipkin
+  rabbitmq:
+    image: rabbitmq:3.9.11-management-alpine
+    container_name: rabbitmq5
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - spring
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - spring
+  mongo-database:
+    image: mongo:latest
+    container_name: mongo-database
+    environment:
+      - MONGO_INITDB_DATABASE=finance # database name you want to make
+#      - MONGO_INITDB_ROOT_USERNAME=microservice # set your container root username
+#      - MONGO_INITDB_ROOT_PASSWORD=password # set your contatner root password
+    ports:
+      - "27017:27017"
+    networks:
+      - mongo
+    volumes:
+      - mongodb_data:/data/db
+networks:
+  postgres:
+    driver: bridge
+  spring:
+    driver: bridge
+  mongo:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
+  mongodb_data:

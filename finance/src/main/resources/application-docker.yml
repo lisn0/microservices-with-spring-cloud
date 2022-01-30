@@ -1,0 +1,20 @@
+server:
+    port: 9001
+
+spring:
+    application:
+        name: finance
+    rabbitmq:
+        addresses: rabbitmq:5672
+        username: guest
+        password: guest
+    data:
+      mongodb:
+          uri: mongodb://mongo-database:27017/finance?retryWrites=true&w=majority
+
+eureka:
+    client:
+        serviceUrl:
+            defaultZone: http://eureka-server:8761/eureka
+        fetch-registry: true
+        register-with-eureka: true

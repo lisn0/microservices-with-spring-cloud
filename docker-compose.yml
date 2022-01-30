@@ -28,7 +28,7 @@ services:
       - postgres
     restart: unless-stopped
   interior:
-    image: lisn0/interior:latest
+    image: lisno/interior:latest
     container_name: interior
     restart: on-failure
     ports:
@@ -43,7 +43,7 @@ services:
       - eureka-server
       - zipkin
   finance:
-    image: lisn0/finance:mongo
+    image: lisno/finance:mongo
     container_name: finance
     restart: on-failure
     ports:
@@ -59,33 +59,33 @@ services:
       - eureka-server
       - mongo-database
       - zipkin
-  eureka-server:
-    image: lisn0/eureka-server:latest
-    container_name: eureka-server
-    ports:
-      - "8761:8761"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    networks:
-      - postgres
-      - spring
-    depends_on:
-      - zipkin
-
-  api-gateway:
-    image: lisn0/api-gateway:latest
-    container_name: api-gateway
-    ports:
-      - "8083:8083"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    networks:
-      - spring
-    depends_on:
-      - eureka-server
-      - zipkin
-      - finance
-      - interior
+#  eureka-server:
+#    image: lisn0/eureka-server:latest
+#    container_name: eureka-server
+#    ports:
+#      - "8761:8761"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - postgres
+#      - spring
+#    depends_on:
+#      - zipkin
+#
+#  api-gateway:
+#    image: lisn0/api-gateway:latest
+#    container_name: api-gateway
+#    ports:
+#      - "8083:8083"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - spring
+#    depends_on:
+#      - eureka-server
+#      - zipkin
+#      - finance
+#      - interior
   rabbitmq:
     image: rabbitmq:3.9.11-management-alpine
     container_name: rabbitmq

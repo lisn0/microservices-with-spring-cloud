@@ -1,0 +1,23 @@
+server:
+    port: 9001
+
+spring:
+    application:
+        name: finance
+    rabbitmq:
+        addresses: rabbitmq:5672
+        username: guest
+        password: guest
+    data:
+      mongodb:
+          uri: mongodb://mongodb:27017/finance?retryWrites=true&w=majority
+    zipkin:
+        base-url: http://zipkin:9411
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://eureka-server:8761/eureka
+        fetch-registry: true
+        register-with-eureka: true
+        enabled: false

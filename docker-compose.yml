@@ -84,9 +84,11 @@ services:
     depends_on:
       - eureka-server
       - zipkin
+      - finance
+      - interior
   rabbitmq:
     image: rabbitmq:3.9.11-management-alpine
-    container_name: rabbitmq5
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"

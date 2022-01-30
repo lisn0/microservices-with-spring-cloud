@@ -4,8 +4,13 @@ server:
 spring:
   application:
     name: finance
+  zipkin:
+    base-url: http://localhost:9411
   rabbitmq:
     addresses: localhost:5672
+    username: guest
+    password: guest
+
   data:
     mongodb:
       uri: mongodb://localhost:27017/finance?retryWrites=true&w=majority

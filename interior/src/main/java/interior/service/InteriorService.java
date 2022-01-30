@@ -3,10 +3,16 @@ package interior.service;
 import interior.controller.InteriorRegistrationRequest;
 import interior.model.Interior;
 import interior.repository.InteriorRepository;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
-public record InteriorService(InteriorRepository interiorRepository) {
+@Slf4j
+@AllArgsConstructor
+public class InteriorService {
+
+    private final InteriorRepository interiorRepository;
 
     public void registerOffence(InteriorRegistrationRequest request) {
         Interior interior = Interior.builder()
@@ -18,9 +24,13 @@ public record InteriorService(InteriorRepository interiorRepository) {
                 .type(request.type())
                 .build();
         interiorRepository.save(interior);
+
+        log.info("registering  {} ", request);
+
     }
 
     public Interior findByCin(Integer cin) {
         return interiorRepository.findByCin(cin);
     }
+
 }

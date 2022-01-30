@@ -11,6 +11,8 @@ spring:
     data:
       mongodb:
           uri: mongodb://mongo-database:27017/finance?retryWrites=true&w=majority
+    zipkin:
+        base-url: http://zipkin:9411
 
 eureka:
     client:

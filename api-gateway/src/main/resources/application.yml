@@ -9,7 +9,8 @@ spring:
 
     cloud:
       loadbalancer:
-        enabled: true
+        ribbon:
+          enabled: false
       gateway:
          discovery:
            locator:

@@ -14,7 +14,7 @@ spec:
   - host: microservices.info
     http:
       paths:
-      - path: /api/finance
+      - path: /api/v1/finance
         pathType: Prefix
         backend:
             service:
@@ -26,12 +26,5 @@ spec:
         backend:
           service:
             name: interior
-            port:
-              number: 8080
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: hello-python
             port:
               number: 8080
